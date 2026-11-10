@@ -7,62 +7,332 @@
 <title>Bilimdon bolajon</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#fff8ed;color:#493b60;text-align:center}
-header{background:#a78bfa;color:white;padding:25px 10px;border-radius:0 0 30px 30px}
-h1{margin:8px}
-main{padding:20px}
-.welcome{background:white;padding:20px;border-radius:20px;margin:15px auto;max-width:500px}
-.games{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:500px;margin:auto}
-.card{background:white;border:0;border-radius:20px;padding:22px 8px;font-size:18px;box-shadow:0 3px 10px #ddd;cursor:pointer;color:#493b60}
-.card span{font-size:38px;display:block;margin-bottom:8px}
-button{cursor:pointer}
-#game{background:white;border-radius:20px;padding:22px;margin:20px auto;max-width:500px;min-height:160px}
-.answer{background:#e9ddff;border:0;border-radius:12px;padding:13px;margin:6px;font-size:20px}
-footer{padding:20px;color:#887b99}
+body{
+ margin:0;font-family:Arial,sans-serif;
+ background:#fff8ed;color:#493c60;
+}
+header{
+ background:#a78bfa;color:white;text-align:center;
+ padding:30px 12px;border-radius:0 0 35px 35px;
+}
+header h1{font-size:32px;margin:10px}
+header p{font-size:17px}
+main{max-width:750px;margin:auto;padding:20px}
+.welcome,.quiz,.result{
+ background:white;border-radius:25px;padding:25px;
+ text-align:center;margin:20px 0;
+ box-shadow:0 5px 18px #00000012;
+}
+.welcome h2{font-size:25px}
+h2{color:#493c60}
+.categories{
+ display:grid;grid-template-columns:1fr 1fr;gap:15px;
+}
+.category{
+ border:0;background:white;border-radius:22px;
+ padding:25px 10px;font-size:19px;color:#493c60;
+ box-shadow:0 5px 15px #00000012;
+ cursor:pointer;
+}
+.category span{display:block;font-size:42px;margin-bottom:12px}
+.category:active,.option:active{transform:scale(.97)}
+.category:hover{background:#f0eaff}
+button{font-family:inherit}
+.hidden{display:none}
+.progress{
+ background:#eee;border-radius:20px;height:12px;
+ overflow:hidden;margin:18px 0;
+}
+#progressBar{
+ height:100%;width:0;background:#8b5cf6;
+ transition:.3s;
+}
+#questionNumber{color:#8b5cf6;font-weight:bold}
+#question{
+ font-size:24px;line-height:1.4;margin:25px 0;
+}
+.options{
+ display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.option{
+ padding:17px 8px;border:2px solid #e7ddfa;
+ background:#faf8ff;border-radius:16px;
+ font-size:18px;color:#493c60;cursor:pointer;
+}
+.option.correct{background:#d7f8df;border-color:#28a745}
+.option.wrong{background:#ffe0e0;border-color:#dc3545}
+.option:disabled{cursor:default}
+#feedback{
+ min-height:35px;margin:18px 0;
+ font-size:18px;font-weight:bold;
+}
+.next,.home{
+ border:0;border-radius:15px;padding:15px 25px;
+ background:#8b5cf6;color:white;font-size:17px;
+ cursor:pointer;margin:5px;
+}
+.home{background:#64748b}
+.stars{font-size:28px;color:#f5a623}
+.result h2{font-size:28px}
+.result p{font-size:20px}
+footer{text-align:center;padding:25px;color:#927eaa}
+@media(max-width:400px){
+ header h1{font-size:26px}
+ .category{font-size:16px}
+ #question{font-size:21px}
+ .option{font-size:16px}
+}
 </style>
 </head>
 <body>
+
 <header>
 <h1>🌈 Bilimdon bolajon</h1>
 <p>O'ynaymiz, o'rganamiz, bilim olamiz!</p>
 </header>
+
 <main>
+<section id="home">
 <div class="welcome">
 <h2>Assalomu alaykum, bolajon! 👋</h2>
 <p>Bugun qanday bilimlarni o'rganamiz?</p>
+<p>O'zingga yoqqan mavzuni tanla!</p>
 </div>
+
 <h2>🎈 O'quv olamimiz</h2>
-<div class="games">
-<button class="card" onclick="play('colors')"><span>🎨</span>Ranglar</button>
-<button class="card" onclick="play('numbers')"><span>🔢</span>Sonlar</button>
-<button class="card" onclick="play('animals')"><span>🐱</span>Hayvonlar</button>
-<button class="card" onclick="play('shapes')"><span>🔺</span>Shakllar</button>
+<div class="categories">
+<button class="category" onclick="startQuiz('colors')">
+<span>🎨</span>Ranglar
+</button>
+<button class="category" onclick="startQuiz('numbers')">
+<span>🔢</span>Sonlar
+</button>
+<button class="category" onclick="startQuiz('animals')">
+<span>🐱</span>Hayvonlar
+</button>
+<button class="category" onclick="startQuiz('shapes')">
+<span>🔺</span>Shakllar
+</button>
 </div>
-<div id="game">
-<h2>✨ O'yinni tanla!</h2>
-<p>Bilimingni sinab ko'rishga tayyormisan?</p>
+</section>
+
+<section id="game" class="quiz hidden">
+<h2 id="categoryTitle"></h2>
+<div class="stars">⭐ <span id="score">0</span></div>
+<div class="progress">
+<div id="progressBar"></div>
 </div>
+<p id="questionNumber"></p>
+<div id="question"></div>
+<div class="options" id="options"></div>
+<div id="feedback"></div>
+<button id="nextButton" class="next hidden"
+onclick="nextQuestion()">Keyingi savol ➜</button>
+<button class="home" onclick="goHome()">🏠 Bosh sahifa</button>
+</section>
+
+<section id="result" class="result hidden">
+<h2>🎉 Barakalla, bolajon!</h2>
+<div class="stars" id="resultStars"></div>
+<p id="resultText"></p>
+<p id="resultScore"></p>
+<button class="next" onclick="restartQuiz()">🔄 Qayta o'ynash</button>
+<button class="home" onclick="goHome()">🏠 Bosh sahifa</button>
+</section>
 </main>
-<footer>💜 Bilimdon bolajon | Bilim olish — zavqli!</footer>
+
+<footer>🌈 Bilimdon bolajon — bilim olish quvonchli!</footer>
+
 <script>
-const games={
-colors:{q:"Osmon qanday rangda?",a:["Qizil","Ko'k","Sariq"],correct:1},
-numbers:{q:"2 + 1 nechaga teng?",a:["2","3","4"],correct:1},
-animals:{q:"Qaysi hayvon miyovlaydi?",a:["Mushuk","Sigir","It"],correct:0},
-shapes:{q:"To'p qaysi shaklda?",a:["Kvadrat","Doira","Uchburchak"],correct:1}
+const data = {
+colors:{
+title:"🎨 Ranglar olami",
+questions:[
+["Osmon qanday rangda?","Ko'k","Qizil","Yashil","Sariq", "Ko'k"],
+["O'tlar qanday rangda?","Yashil","Oq","Qora","Pushti","Yashil"],
+["Qor qanday rangda?","Oq","Qizil","Ko'k","Sariq","Oq"],
+["Pomidor ko'pincha qanday rangda?","Qizil","Ko'k","Qora","Binafsha","Qizil"],
+["Limon qanday rangda?","Sariq","Yashil","Qora","Oq","Sariq"],
+["Apelsin qanday rangda?","To'q sariq","Ko'k","Oq","Qora","To'q sariq"],
+["Sut qanday rangda?","Oq","Qizil","Yashil","Ko'k","Oq"],
+["Ko'mir qanday rangda?","Qora","Sariq","Pushti","Oq","Qora"],
+["Binafsha gul qanday rangda?","Binafsha","Yashil","Sariq","Oq","Binafsha"],
+["Sabzi odatda qanday rangda?","To'q sariq","Ko'k","Qora","Oq","To'q sariq"],
+["Barglar kuzda qanday rangga kirishi mumkin?","Sariq","Ko'k","Oq","Pushti","Sariq"],
+["Qulupnay qanday rangda?","Qizil","Ko'k","Qora","Oq","Qizil"],
+["Bulutlar ko'pincha qanday rangda?","Oq","Qizil","Yashil","Qora","Oq"],
+["Dengiz suvi rasmlarda ko'pincha qanday rangda?","Ko'k","Pushti","Qora","Sariq","Ko'k"],
+["Qaysi rang quyoshni eslatadi?","Sariq","Qora","Ko'k","Yashil","Sariq"]
+]},
+numbers:{
+title:"🔢 Sonlar olami",
+questions:[
+["1 dan keyin qaysi son keladi?","2","3","4","5","2"],
+["2 dan keyin qaysi son keladi?","3","1","5","6","3"],
+["1 + 1 nechaga teng?","2","3","4","5","2"],
+["2 + 2 nechaga teng?","4","3","5","6","4"],
+["5 dan oldin qaysi son keladi?","4","6","3","2","4"],
+["3 + 1 nechaga teng?","4","2","5","6","4"],
+["5 - 2 nechaga teng?","3","2","4","5","3"],
+["Eng kichik son qaysi?","1","5","8","10","1"],
+["Bir qo'lda nechta barmoq bor?","5","4","6","10","5"],
+["Bir haftada necha kun bor?","7","5","6","8","7"],
+["10 dan keyin qaysi son keladi?","11","9","8","12","11"],
+["3 + 2 nechaga teng?","5","4","6","7","5"],
+["4 - 1 nechaga teng?","3","2","4","5","3"],
+["Qaysi son katta?","8","3","5","2","8"],
+["2 + 3 nechaga teng?","5","6","4","3","5"]
+]},
+animals:{
+title:"🐾 Hayvonlar olami",
+questions:[
+["Qaysi hayvon miyovlaydi?","Mushuk","It","Sigir","Ot","Mushuk"],
+["Qaysi hayvon vovullaydi?","It","Mushuk","Qo'y","Ot","It"],
+["Qaysi hayvon sut beradi?","Sigir","Sher","Bo'ri","Tulki","Sigir"],
+["Qaysi hayvon uzun bo'yinga ega?","Jirafa","Mushuk","Quyon","It","Jirafa"],
+["Qaysi hayvon suvda yashaydi?","Baliq","Ot","Tovuq","Sigir","Baliq"],
+["Qaysi hayvonning tanasida chiziqlar bor?","Zebra","Sigir","Quyon","Mushuk","Zebra"],
+["Qaysi hayvon sabzi yeyishni yaxshi ko'radi?","Quyon","Sher","Bo'ri","Burgut","Quyon"],
+["Qaysi hayvon o'rmonda yashaydi va asalni yaxshi ko'radi?","Ayiq","Ot","Sigir","Tovuq","Ayiq"],
+["Qaysi hayvon tuxum qo'yadi?","Tovuq","Mushuk","It","Sigir","Tovuq"],
+["Qaysi hayvonning xartumi bor?","Fil","Sher","Ot","Quyon","Fil"],
+["Qaysi hayvon o'rmon podshohi deb ataladi?","Sher","Mushuk","Sigir","Qo'y","Sher"],
+["Qaysi hayvon sakrab yuradi va bolasini xaltasida olib yuradi?","Kenguru","Ot","It","Fil","Kenguru"],
+["Qaysi qush gapirishni o'rganishi mumkin?","To'tiqush","Tovuq","O'rdak","G'oz","To'tiqush"],
+["Qaysi hayvonning bo'yni uzun?","Jirafa","Ayiq","Quyon","Mushuk","Jirafa"],
+["Qaysi hayvon vovullamaydi, miyovlamaydi, balki ma'raydi?","Eshak","Mushuk","It","Sigir","Eshak"]
+]},
+shapes:{
+title:"🔺 Shakllar olami",
+questions:[
+["Uchta tomoni bor shakl qaysi?","Uchburchak","Doira","Kvadrat","To'rtburchak","Uchburchak"],
+["Dumaloq shakl qaysi?","Doira","Kvadrat","Uchburchak","To'rtburchak","Doira"],
+["To'rtta teng tomoni bor shakl qaysi?","Kvadrat","Doira","Uchburchak","Oval","Kvadrat"],
+["To'rtta burchagi bor shakl qaysi?","To'rtburchak","Doira","Uchburchak","Oval","To'rtburchak"],
+["Koptok qanday shaklga o'xshaydi?","Shar","Kub","Piramida","Konus","Shar"],
+["Soatning dumaloq yuzi qaysi shaklga o'xshaydi?","Doira","Uchburchak","Kvadrat","To'rtburchak","Doira"],
+["Deraza ko'pincha qaysi shaklda bo'ladi?","To'rtburchak","Doira","Uchburchak","Oval","To'rtburchak"],
+["Nechta burchagi uchburchakda bor?","3","4","5","6","3"],
+["Kvadratning nechta tomoni bor?","4","3","5","6","4"],
+["Doiraning burchaklari nechta?","0","2","3","4","0"],
+["Qaysi shakl tuxumga o'xshaydi?","Oval","Kvadrat","Uchburchak","Kub","Oval"],
+["Piramida qaysi shaklga o'xshaydi?","Piramida","Doira","Oval","Kvadrat","Piramida"],
+["Qaysi shaklning 6 ta tomoni bor?","Olti burchak","Uchburchak","Doira","Kvadrat","Olti burchak"],
+["Qaysi shaklning 5 ta tomoni bor?","Besh burchak","Doira","Kvadrat","Uchburchak","Besh burchak"],
+["Muzlatkich eshigi ko'pincha qaysi shaklda?","To'rtburchak","Doira","Uchburchak","Oval","To'rtburchak"]
+]}
 };
-function play(type){
-let g=games[type];
-let html="<h2>"+g.q+"</h2>";
-g.a.forEach((a,i)=>{
-html+='<button class="answer" onclick="check('+i+','+g.correct+')">'+a+'</button>';
-});
-document.getElementById("game").innerHTML=html;
+
+let category="";
+let questions=[];
+let current=0;
+let score=0;
+let answered=false;
+
+function shuffle(array){
+ let a=[...array];
+ for(let i=a.length-1;i>0;i--){
+  let j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
 }
-function check(i,c){
-document.getElementById("game").innerHTML=
-i===c?"<h2>🎉 Barakalla!</h2><p>Juda aqlli bolajonsan!</p>":"<h2>😊 Yana urinib ko'r!</h2><p>Sen albatta uddalaysan!</p>";
+
+function startQuiz(key){
+ category=key;
+ questions=shuffle(data[key].questions);
+ current=0;
+ score=0;
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("result").classList.add("hidden");
+ document.getElementById("game").classList.remove("hidden");
+ document.getElementById("categoryTitle").textContent=data[key].title;
+ document.getElementById("score").textContent=score;
+ showQuestion();
+}
+
+function showQuestion(){
+ answered=false;
+ let q=questions[current];
+ document.getElementById("questionNumber").textContent=
+ "Savol "+(current+1)+" / "+questions.length;
+ document.getElementById("progressBar").style.width=
+ (current/questions.length*100)+"%";
+ document.getElementById("question").textContent=q[0];
+ document.getElementById("feedback").textContent="";
+ document.getElementById("nextButton").classList.add("hidden");
+
+ let options=shuffle(q.slice(1,5));
+ let box=document.getElementById("options");
+ box.innerHTML="";
+
+ options.forEach(option=>{
+  let btn=document.createElement("button");
+  btn.className="option";
+  btn.textContent=option;
+  btn.onclick=()=>checkAnswer(btn,option,q[5]);
+  box.appendChild(btn);
+ });
+}
+
+function checkAnswer(btn,selected,correct){
+ if(answered)return;
+ answered=true;
+ let buttons=document.querySelectorAll(".option");
+ buttons.forEach(b=>{
+  b.disabled=true;
+  if(b.textContent===correct)b.classList.add("correct");
+ });
+ if(selected===correct){
+  score++;
+  document.getElementById("feedback").textContent="🎉 Barakalla! To'g'ri!";
+  document.getElementById("feedback").style.color="#239b45";
+ }else{
+  btn.classList.add("wrong");
+  document.getElementById("feedback").textContent=
+  "😊 To'g'ri javob: "+correct;
+  document.getElementById("feedback").style.color="#dc3545";
+ }
+ document.getElementById("score").textContent=score;
+ document.getElementById("nextButton").classList.remove("hidden");
+ document.getElementById("nextButton").textContent=
+ current===questions.length-1?"Natijani ko'rish 🏆":"Keyingi savol ➜";
+}
+
+function nextQuestion(){
+ if(!answered)return;
+ current++;
+ if(current<questions.length){
+  showQuestion();
+ }else{
+  showResult();
+ }
+}
+
+function showResult(){
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ document.getElementById("progressBar").style.width="100%";
+ document.getElementById("resultStars").textContent=
+ "⭐".repeat(Math.max(1,Math.round(score/3)));
+ document.getElementById("resultText").textContent=
+ score>=13?"Ajoyib! Sen haqiqiy bilimdon ekansan! 🏆":
+ score>=8?"Juda yaxshi! Yana mashq qil! 👏":
+ "Harakat qil! Sen albatta uddalaysan! 💖";
+ document.getElementById("resultScore").textContent=
+ "Natijang: "+score+" / "+questions.length;
+}
+
+function restartQuiz(){
+ startQuiz(category);
+}
+
+function goHome(){
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("result").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
 }
 </script>
 </body>
-</html>
+  </html>
+
