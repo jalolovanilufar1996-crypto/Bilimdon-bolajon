@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilimdon bolajon</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#fff8ed;color:#493b60;text-align:center}
+header{background:#a78bfa;color:white;padding:25px 10px;border-radius:0 0 30px 30px}
+h1{margin:8px}
+main{padding:20px}
+.welcome{background:white;padding:20px;border-radius:20px;margin:15px auto;max-width:500px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:500px;margin:auto}
+.card{background:white;border:0;border-radius:20px;padding:22px 8px;font-size:18px;box-shadow:0 3px 10px #ddd;cursor:pointer;color:#493b60}
+.card span{font-size:38px;display:block;margin-bottom:8px}
+button{cursor:pointer}
+#game{background:white;border-radius:20px;padding:22px;margin:20px auto;max-width:500px;min-height:160px}
+.answer{background:#e9ddff;border:0;border-radius:12px;padding:13px;margin:6px;font-size:20px}
+footer{padding:20px;color:#887b99}
+</style>
+</head>
+<body>
+<header>
+<h1>🌈 Bilimdon bolajon</h1>
+<p>O'ynaymiz, o'rganamiz, bilim olamiz!</p>
+</header>
+<main>
+<div class="welcome">
+<h2>Assalomu alaykum, bolajon! 👋</h2>
+<p>Bugun qanday bilimlarni o'rganamiz?</p>
+</div>
+<h2>🎈 O'quv olamimiz</h2>
+<div class="games">
+<button class="card" onclick="play('colors')"><span>🎨</span>Ranglar</button>
+<button class="card" onclick="play('numbers')"><span>🔢</span>Sonlar</button>
+<button class="card" onclick="play('animals')"><span>🐱</span>Hayvonlar</button>
+<button class="card" onclick="play('shapes')"><span>🔺</span>Shakllar</button>
+</div>
+<div id="game">
+<h2>✨ O'yinni tanla!</h2>
+<p>Bilimingni sinab ko'rishga tayyormisan?</p>
+</div>
+</main>
+<footer>💜 Bilimdon bolajon | Bilim olish — zavqli!</footer>
+<script>
+const games={
+colors:{q:"Osmon qanday rangda?",a:["Qizil","Ko'k","Sariq"],correct:1},
+numbers:{q:"2 + 1 nechaga teng?",a:["2","3","4"],correct:1},
+animals:{q:"Qaysi hayvon miyovlaydi?",a:["Mushuk","Sigir","It"],correct:0},
+shapes:{q:"To'p qaysi shaklda?",a:["Kvadrat","Doira","Uchburchak"],correct:1}
+};
+function play(type){
+let g=games[type];
+let html="<h2>"+g.q+"</h2>";
+g.a.forEach((a,i)=>{
+html+='<button class="answer" onclick="check('+i+','+g.correct+')">'+a+'</button>';
+});
+document.getElementById("game").innerHTML=html;
+}
+function check(i,c){
+document.getElementById("game").innerHTML=
+i===c?"<h2>🎉 Barakalla!</h2><p>Juda aqlli bolajonsan!</p>":"<h2>😊 Yana urinib ko'r!</h2><p>Sen albatta uddalaysan!</p>";
+}
+</script>
+</body>
+</html>
